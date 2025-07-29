@@ -2,6 +2,43 @@
 
 We analysed three years (2016–2018) of the hotel’s booking and revenue data. After **cleaning the data**, key patterns emerged in revenue trends, guest behavior, and customer segments. In particular, revenue is highly **skewed** toward a few top guests (a classic Pareto pattern), and the business shows **strong seasonality** (peaking in summer). We also segmented customers by recency, frequency, and spend (RFM) to identify loyalty and churn risks. The findings suggest focusing on **retaining high-value guests** and smoothing seasonal demand. Below is a detailed breakdown of each area and actionable recommendations.
 
+# Customer Dataset Description
+
+| Variable               | Type        | Description                                                                                                                                                     |
+|------------------------|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ID                     | Numeric     | Customer ID                                                                                                                                                     |
+| Nationality            | Categorical | Country of origin (ISO 3155–3:2013 format).                                                                                                                     |
+| Age                    | Numeric     | Customer's age at the last day of the extraction period.                                                                                                       |
+| DaysSinceCreation      | Number      | Days since customer record was created.                                                                                                                        |
+| NameHash               | Categorical | SHA2–256 hash of the customer's name (used for anonymization).                                                                                                 |
+| DocIDHash              | Categorical | SHA2–256 hash of identification document number provided at check-in.                                                                                          |
+| AverageLeadTime        | Numeric     | Average days between booking and arrival.                                                                                                                      |
+| LodgingRevenue         | Numeric     | Total spent on lodging (in Euros).                                                                                                                              |
+| OtherRevenue           | Numeric     | Total spent on other expenses like food, spa, etc. (in Euros).                                                                                                  |
+| BookingsCanceled       | Numeric     | Number of canceled bookings.                                                                                                                                    |
+| BookingsNoShowed       | Numeric     | Number of "no-show" bookings.                                                                                                                                   |
+| BookingsCheckedIn      | Numeric     | Number of bookings where the customer stayed.                                                                                                                   |
+| PersonsNights          | Numeric     | Total number of persons/nights (nights × people).                                                                                                               |
+| RoomNights             | Numeric     | Total room/nights (rooms × nights).                                                                                                                             |
+| DaysSinceLastStay      | Numeric     | Days since the customer last stayed (−1 if never).                                                                                                              |
+| DaysSinceFirstStay     | Numeric     | Days since the customer first stayed (−1 if never).                                                                                                             |
+| DistributionChannel    | Categorical | Distribution channel used by the customer.                                                                                                                      |
+| MarketSegment          | Categorical | Market segment the customer belongs to.                                                                                                                         |
+| SRHighFloor            | Boolean     | Requests high floor (0: No, 1: Yes).                                                                                                                             |
+| SRLowFloor             | Boolean     | Requests low floor (0: No, 1: Yes).                                                                                                                              |
+| SRAccessibleRoom       | Boolean     | Requests accessible room (0: No, 1: Yes).                                                                                                                        |
+| SRMediumFloor          | Boolean     | Requests middle floor (0: No, 1: Yes).                                                                                                                           |
+| SRBathtub              | Boolean     | Requests bathtub (0: No, 1: Yes).                                                                                                                                |
+| SRShower               | Boolean     | Requests shower (0: No, 1: Yes).                                                                                                                                 |
+| SRCrib                 | Boolean     | Requests crib (0: No, 1: Yes).                                                                                                                                   |
+| SRKingSizeBed          | Boolean     | Requests king-size bed (0: No, 1: Yes).                                                                                                                          |
+| SRTwinBed              | Boolean     | Requests twin bed (0: No, 1: Yes).                                                                                                                               |
+| SRNearElevator         | Boolean     | Requests room near elevator (0: No, 1: Yes).                                                                                                                     |
+| SRAwayFromElevator     | Boolean     | Requests room away from elevator (0: No, 1: Yes).                                                                                                                |
+| SRNoAlcoholInMiniBar   | Boolean     | Requests no alcohol in mini-bar (0: No, 1: Yes).                                                                                                                 |
+| SRQuietRoom            | Boolean     | Requests quiet room (0: No, 1: Yes).                                                                                                                              |
+
+
 ## Data Preparation & Cleaning
 
 * **Zero-Revenue Bookings:** We identified about **19,066** bookings with €0 revenue (cancellations/no-shows), including **200 stays** where customers actually checked in but paid nothing (likely comps or promotions, many from Portugal). These inflate occupancy stats and distort RevPAR. We recommend **flagging or excluding** zero-revenue stays in core analyses, so metrics reflect paying guests only.
@@ -20,6 +57,9 @@ We analysed three years (2016–2018) of the hotel’s booking and revenue data.
 
 * **Seasonal Trends:** Revenue and bookings show **strong summer peaks and winter troughs**:
 
+  <img width="987" height="490" alt="image" src="https://github.com/user-attachments/assets/33a4e303-e433-4068-b02b-dac84b7bd500" />
+
+
   * **High season:** May–September each year accounted for the bulk of revenue. For example, **Sept 2018** hit a record **€1.41 M**, with July–Sept 2018 each above €1.2 M.
   * **Low season:** October–December see sharp drops. Dec 2018 fell to €476 K (about a **66% drop** from Sept). On average each Nov–Dec revenue fell **>30% month-over-month**.
   * **Quarterly view:** Q3 (summer) grew from \~€0.8 M (2016) to \~€3.9 M (2018) – nearly **4× growth**. After Q3, Q4 stabilizes at €2.0–2.4 M.
@@ -31,6 +71,9 @@ We analysed three years (2016–2018) of the hotel’s booking and revenue data.
 * **Monthly Volatility:** Month-to-month changes were large (e.g., one year saw +193% rise from Feb to Mar, then a 39.5% drop Dec vs Nov). High volatility implies forecasting carefully and monitoring booking pace. Real-time tracking of bookings and cancellations can anticipate surges or dips. (For example, if a key event is scheduled or an OTA promotion runs, bookings may spike unexpectedly.)
 
 * **Channel & Market Mix (Not shown):** Though not detailed here, segmenting revenue by booking channel (e.g. OTA vs direct) and market (country) can reveal which sources produce higher average spend. That insight helps allocate marketing spend. *We suggest analyzing channels similarly to confirm where top guests book, then focusing on those high-revenue channels.*
+
+   <img width="990" height="590" alt="image" src="https://github.com/user-attachments/assets/7289b2c4-f71b-4059-9cab-bc8607c1b3d9" />
+
 
 ## Customer Demographics & Booking Behavior
 
